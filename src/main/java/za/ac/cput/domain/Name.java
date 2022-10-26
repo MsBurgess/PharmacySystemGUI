@@ -65,11 +65,11 @@ public class Name implements Serializable {
 
     @Override
     public String toString() {
-        return "Name{" +
-                "firstName='" + firstName + '\'' +
-                ", middleName='" + middleName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                '}';
+        return
+                 firstName + ' ' +
+                 middleName + ' ' +
+                 lastName + ' ';
+                
     }
 
     public static class Builder {

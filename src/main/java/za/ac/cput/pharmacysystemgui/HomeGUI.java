@@ -30,7 +30,7 @@ public class HomeGUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        presc = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -73,10 +73,15 @@ public class HomeGUI extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("jButton2");
-        jButton2.setMaximumSize(new java.awt.Dimension(88, 22));
-        jButton2.setMinimumSize(new java.awt.Dimension(88, 22));
-        jButton2.setPreferredSize(new java.awt.Dimension(88, 22));
+        presc.setText("PRESCRIPTION");
+        presc.setMaximumSize(new java.awt.Dimension(88, 22));
+        presc.setMinimumSize(new java.awt.Dimension(88, 22));
+        presc.setPreferredSize(new java.awt.Dimension(88, 22));
+        presc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prescActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("jButton3");
 
@@ -115,11 +120,11 @@ public class HomeGUI extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(89, 89, 89)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton3)
                             .addComponent(jButton4)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                            .addComponent(presc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(107, 107, 107)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton8)
@@ -150,7 +155,7 @@ public class HomeGUI extends javax.swing.JFrame {
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(31, 31, 31)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(presc, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton6)
                     .addComponent(jButton10))
                 .addGap(39, 39, 39)
@@ -234,6 +239,15 @@ public class HomeGUI extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_jButton12ActionPerformed
 
+    private void prescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prescActionPerformed
+        // TODO add your handling code here:
+            PrescriptionGUI prescription = new PrescriptionGUI();
+        prescription.show();
+        
+        dispose(); //close current JFRAME
+        
+    }//GEN-LAST:event_prescActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -274,7 +288,6 @@ public class HomeGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -287,5 +300,6 @@ public class HomeGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JButton presc;
     // End of variables declaration//GEN-END:variables
 }

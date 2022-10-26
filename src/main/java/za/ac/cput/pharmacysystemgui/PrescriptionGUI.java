@@ -152,6 +152,9 @@ public class PrescriptionGUI extends javax.swing.JFrame {
         final String deleteURL ="http:localhost:8080/PharmacySystem/prescription/delete/" + prescID;
         delete(deleteURL);
         String responseBody = get(deleteURL);
+        
+         //maybe change this??
+         JOptionPane.showMessageDialog(null,"Entry successfully deleted!");
     }catch(IOException e){
         
          JOptionPane.showMessageDialog(null, e.getMessage());
@@ -194,7 +197,7 @@ public class PrescriptionGUI extends javax.swing.JFrame {
         cboPrescriptionType = new javax.swing.JComboBox<>();
         jPanel5 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        btnDelete = new javax.swing.JButton();
+        btnPrescriptionDelete = new javax.swing.JButton();
         txtIdDelete = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -277,7 +280,7 @@ public class PrescriptionGUI extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(425, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         tablePrescriptionView.setModel(new javax.swing.table.DefaultTableModel(
@@ -294,9 +297,16 @@ public class PrescriptionGUI extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(tablePrescriptionView);
@@ -378,10 +388,10 @@ public class PrescriptionGUI extends javax.swing.JFrame {
 
         jLabel5.setText("ID");
 
-        btnDelete.setText("DELETE");
-        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+        btnPrescriptionDelete.setText("DELETE");
+        btnPrescriptionDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteActionPerformed(evt);
+                btnPrescriptionDeleteActionPerformed(evt);
             }
         });
 
@@ -398,7 +408,7 @@ public class PrescriptionGUI extends javax.swing.JFrame {
                         .addComponent(txtIdDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(142, 142, 142)
-                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnPrescriptionDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(376, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -409,7 +419,7 @@ public class PrescriptionGUI extends javax.swing.JFrame {
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtIdDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(62, 62, 62)
-                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnPrescriptionDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(169, Short.MAX_VALUE))
         );
 
@@ -452,7 +462,7 @@ public class PrescriptionGUI extends javax.swing.JFrame {
                         .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(325, 325, 325))
+                .addContainerGap())
         );
 
         pack();
@@ -489,20 +499,18 @@ public class PrescriptionGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cboPrescriptionTypeActionPerformed
 
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+    private void btnPrescriptionDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrescriptionDeleteActionPerformed
         // TODO add your handling code here:
-        if (evt.getSource() == btnDelete){
-            deletePrescription(txtIdDelete.getText());
+        if (evt.getSource() == btnPrescriptionDelete){
+            deletePrescription(txtIdDelete.getText().trim());
         }
-        
-    }//GEN-LAST:event_btnDeleteActionPerformed
+    }//GEN-LAST:event_btnPrescriptionDeleteActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        deletePrescription("1");
-        getAll();
+
         
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -538,7 +546,7 @@ public class PrescriptionGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton GetAll;
-    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnPrescriptionDelete;
     private javax.swing.JButton btnPrescriptionPost;
     private javax.swing.JComboBox<String> cboPrescriptionType;
     private javax.swing.JButton jButton4;
