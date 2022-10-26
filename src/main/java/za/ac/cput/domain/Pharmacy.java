@@ -8,21 +8,23 @@ Date: 10 October 2022 */
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 /* @Email - Did not use javax validator as commons validator is more thorough when checking for email validation.
  * @NotNull/@NotBlank - Did not use as checks for nulls/blanks is done in the helper and Factory class.*/
 
-
+@Entity
 public class Pharmacy implements Serializable {
 
-
+    @Id
     private String pharmId;
     private String pharmName;
     private String medicationId;
     private String inventoryId;
 
-
-    private PharmacyContact pharmacyContact;
+        private PharmacyContact pharmacyContact;
 
     protected Pharmacy(){
 

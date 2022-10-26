@@ -10,13 +10,18 @@ Date: 10 October 2022 */
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-
+@Entity
 public class PharmacyContact implements Serializable {
 
 
+    @Id
     private String  pharmId;
 
+    @Embedded
     private Contact contact;
 
     public Contact getContact()

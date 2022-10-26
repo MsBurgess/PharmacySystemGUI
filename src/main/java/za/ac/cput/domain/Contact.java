@@ -5,13 +5,17 @@
  */
 
 package za.ac.cput.domain;
-
+import com.sun.istack.NotNull;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
 
+@Embeddable
 public class Contact implements Serializable {
+
     private String contactNumber;
+
     private String email;
 
     public Contact() {}

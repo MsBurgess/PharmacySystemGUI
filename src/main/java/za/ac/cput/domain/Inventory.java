@@ -9,11 +9,14 @@ package za.ac.cput.domain;
 
 
 import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 
+@Entity
 public class Inventory implements Serializable {
 
-
+    @Id
     private String inventoryID;
     private String tableStockAmount;
     private String medicineStockAmount;

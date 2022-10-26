@@ -9,13 +9,19 @@ package za.ac.cput.domain;
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 
+@Entity
 public class EmployeeContact implements Serializable {
 
 
+    @Id
     private String  staffId;
 
+    @Embedded
     private Contact contact;
 
     public Contact getContact()
