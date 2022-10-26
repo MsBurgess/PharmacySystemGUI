@@ -100,6 +100,11 @@ public class HomeGUI extends javax.swing.JFrame {
         jButton10.setText("jButton10");
 
         jButton11.setText("jButton11");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -247,6 +252,14 @@ public class HomeGUI extends javax.swing.JFrame {
         dispose(); //close current JFRAME
         
     }//GEN-LAST:event_prescActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        // TODO add your handling code here:
+         CustomerGUI customer = new CustomerGUI();
+        customer.show();
+        
+        dispose();
+    }//GEN-LAST:event_jButton11ActionPerformed
 
     /**
      * @param args the command line arguments

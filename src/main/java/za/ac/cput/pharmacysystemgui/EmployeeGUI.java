@@ -33,17 +33,6 @@ public class EmployeeGUI extends javax.swing.JFrame {
     
     private static OkHttpClient client = new OkHttpClient();
     
-//    public static String run(String URL) throws IOException{
-//        Request request = new Request.Builder()
-//                .url(URL)
-//                //security part
-//                .header("Authorization",  Credentials.basic("User", "54321"))
-//                .build();
-//        try(Response response = client.newCall(request).execute()){
-//            return response.body().string();
-//        }
-//    }
-    
     private void Authentication(){
 
         if(loginGUI.isAdmin() == false){
@@ -553,6 +542,7 @@ public class EmployeeGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(evt.getSource() == BtnDelete){
             deleteEmployee(deleteEmployeeId.getText().trim());
+             
         }
     }//GEN-LAST:event_BtnDeleteActionPerformed
 
