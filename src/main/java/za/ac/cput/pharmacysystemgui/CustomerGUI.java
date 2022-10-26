@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package za.ac.cput.customergui;
+package za.ac.cput.pharmacysystemgui;
 
 import java.awt.Image;
 import java.awt.Toolkit;
