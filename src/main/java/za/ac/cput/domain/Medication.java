@@ -8,10 +8,12 @@ package za.ac.cput.domain;
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-
+@Entity
 public class Medication implements Serializable {
-
+    @Id
     private String medId;
     private String medName;
     private String medManufacturer;

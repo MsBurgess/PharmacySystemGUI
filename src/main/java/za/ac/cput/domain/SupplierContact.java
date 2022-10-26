@@ -8,11 +8,14 @@ package za.ac.cput.domain;
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-
+@Entity
 public class SupplierContact implements Serializable {
-
+    @Id
     private String suppId;
+    
     private Contact contact;
 
     //Getters

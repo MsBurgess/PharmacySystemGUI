@@ -1,14 +1,18 @@
 package za.ac.cput.domain;
 
 import java.io.Serializable;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-
+@Entity
 public class Customer implements Serializable {
 
 
+   @Id
     private String customerId;
     private String gender;
-
+    @Embedded
     private Name name;
 
     protected Customer(){}

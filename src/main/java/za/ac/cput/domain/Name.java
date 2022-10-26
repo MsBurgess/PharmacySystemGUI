@@ -2,6 +2,7 @@ package za.ac.cput.domain;
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.Embeddable;
 
 /* Name.java
  * Entity for the Name
@@ -9,6 +10,7 @@ import java.util.Objects;
  * 10 August 2022
  */
 
+@Embeddable
 public class Name implements Serializable {
 
     private String firstName;
