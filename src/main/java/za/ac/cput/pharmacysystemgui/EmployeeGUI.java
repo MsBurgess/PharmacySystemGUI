@@ -548,7 +548,8 @@ public class EmployeeGUI extends javax.swing.JFrame {
         save("2164565484","male", "Waseem", "a","Dollie");
         deleteEmployee("219010145");
         
-        
+        MedicationGUI medicationGUI = new MedicationGUI();
+        medicationGUI.show();
         
         
         /* Set the Nimbus look and feel */

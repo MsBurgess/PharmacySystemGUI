@@ -4,12 +4,145 @@
  */
 package za.ac.cput.pharmacysystemgui;
 
+import com.google.gson.Gson;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import za.ac.cput.domain.Medication;
+import za.ac.cput.domain.Supplier;
+import za.ac.cput.factory.SupplierFactory;
+import static za.ac.cput.pharmacysystemgui.MedicationGUI.getAll;
+import static za.ac.cput.pharmacysystemgui.PrescriptionGUI.JSON;
+
 /**
  *
  * @author Ilyaas Davids
  */
 public class SupplierGUI extends javax.swing.JFrame {
-
+    private String suppId,suppName;
+    LoginGUI loginGUI ;
+    private static OkHttpClient client = new OkHttpClient();
+    
+    ///
+            private void showTable(){
+        DefaultTableModel dtModel = (DefaultTableModel) tblSupp.getModel();
+        
+        List supplierList = getAll();
+        List<Supplier> suppliers = supplierList;
+        
+        dtModel.setRowCount(0);
+        
+        for(int i = 0; i <supplierList.size(); i++){
+            dtModel.addRow(
+                    new Object[] {
+                        suppliers.get(i).getSuppId(),
+                        suppliers.get(i).getSuppName(),      
+                    }
+            );
+        }
+    }
+      ////      
+                 private static  String get(String getURL) throws IOException
+    {
+        Request request = new Request.Builder()
+                .url(getURL)
+                .header("Authorization",  Credentials.basic("User", "54321"))
+                .build();
+        try (Response response = client.newCall(request).execute())
+        {
+            return response.body().string();
+        }
+    }   
+ //////   
+      public static List<Supplier> getAll(){
+        List<Supplier> supplierList = new ArrayList<>();
+        
+        try{ 
+            final String URL = "http:localhost:8080/PharmacySystem/supplier/all";
+            String responseBody = get(URL);
+            JSONArray supplier = new JSONArray(responseBody);
+            
+            for (int i = 0; i < supplier.length();i++){
+                JSONObject supplierJSONObject = supplier.getJSONObject(i);
+                
+                Gson g = new Gson();
+                Supplier p = g.fromJson(supplierJSONObject.toString(), Supplier.class);
+                supplierList.add(p);
+                System.out.println(p.toString());
+            }
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return supplierList;
+    }
+    ////
+         private static String post(final String postURL, String json) throws IOException
+    {
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .url(postURL)
+                .header("Authorization",  Credentials.basic("Admin", "12345"))
+                .post(body)
+                .build();
+        try (Response response = client.newCall(request).execute())
+        {
+            return response.body().string();
+        }
+    }
+         public static void save(String suppId, String suppName){
+    
+        try{
+            
+        final String URL = "http:localhost:8080/PharmacySystem/supplier/save";
+        Supplier supplier = SupplierFactory.createSupplier(suppId, suppName);
+        Gson g = new Gson();
+        String jsonString = g.toJson(supplier);
+        String r = post(URL, jsonString);
+        if(r != null)
+            JOptionPane.showMessageDialog(null, "Successfully saved.");
+        else
+            JOptionPane.showMessageDialog(null, "An error has occurred");
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
+         ////Delete
+             private static String delete  (final String deleteURL) throws IOException{
+        Request request = new Request.Builder()
+                .url(deleteURL)
+                .header("Authorization",  Credentials.basic("Admin", "12345"))
+                .delete()
+                .build();
+        
+        try(Response response = client.newCall(request).execute()){
+            return response.body().string();
+        }
+    }
+    
+    public static void deleteSupplier(String suppId){
+    try{
+        final String deleteURL ="http:localhost:8080/PharmacySystem/supplier/delete/" + suppId;
+        delete(deleteURL);
+        String responseBody = get(deleteURL);
+        
+        //maybe change this??
+         JOptionPane.showMessageDialog(null,"Entry successfully deleted!");
+    }catch(IOException e){
+        
+         JOptionPane.showMessageDialog(null, e.getMessage());
+    }
+}
+    
     /**
      * Creates new form SupplierGUI
      */
@@ -27,63 +160,64 @@ public class SupplierGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel4 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
-        btnDisplaySupp = new javax.swing.JButton();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        btnDeleteSupp = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblSupp = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        editMedName = new javax.swing.JTextField();
-        btnSaveMed = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
-        editUMedName = new javax.swing.JTextField();
-        btnUpdateMed = new javax.swing.JButton();
+        editSuppName = new javax.swing.JTextField();
+        btnSaveSupp = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         btnSuppContact = new javax.swing.JButton();
         btnHome = new javax.swing.JButton();
+        SuppId = new javax.swing.JLabel();
+        editSuppId = new javax.swing.JTextField();
+        btnSuppDisplay = new javax.swing.JButton();
+        btnSuppPopulate = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
 
         jLabel4.setText("jLabel4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(null));
 
-        jLabel5.setText("Delete Supplier:");
-        jLabel5.setName("lblMedDelete"); // NOI18N
+        jLabel10.setText("Delete Supplier:");
+        jLabel10.setName("lblMedDelete"); // NOI18N
 
-        jButton3.setText("Delete");
-        jButton3.setName("btnDeleteMed"); // NOI18N
+        btnDeleteSupp.setText("Delete");
+        btnDeleteSupp.setName("btnDeleteMed"); // NOI18N
+        btnDeleteSupp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteSuppActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnDeleteSupp, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
                 .addContainerGap(47, Short.MAX_VALUE))
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
+                .addComponent(btnDeleteSupp)
                 .addContainerGap(40, Short.MAX_VALUE))
         );
 
-        btnDisplaySupp.setText("Display Suppliers");
-        btnDisplaySupp.setName("btnDisplayMed"); // NOI18N
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblSupp.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
                 {null, null},
@@ -102,7 +236,7 @@ public class SupplierGUI extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblSupp);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 51)));
         jPanel1.setName("btnMedSave"); // NOI18N
@@ -110,13 +244,13 @@ public class SupplierGUI extends javax.swing.JFrame {
         jLabel1.setText("Supplier Name:");
         jLabel1.setName("lblMedName"); // NOI18N
 
-        editMedName.setName("editMedName"); // NOI18N
+        editSuppName.setName("editSuppName"); // NOI18N
 
-        btnSaveMed.setText("Save");
-        btnSaveMed.setName("btnSaveMed"); // NOI18N
-        btnSaveMed.addActionListener(new java.awt.event.ActionListener() {
+        btnSaveSupp.setText("Save");
+        btnSaveSupp.setName("btnSaveSupp"); // NOI18N
+        btnSaveSupp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveMedActionPerformed(evt);
+                btnSaveSuppActionPerformed(evt);
             }
         });
 
@@ -129,8 +263,8 @@ public class SupplierGUI extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(27, 27, 27)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnSaveMed, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(editMedName, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnSaveSupp, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(editSuppName, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(98, 98, 98)
                         .addComponent(jLabel1)))
@@ -142,55 +276,13 @@ public class SupplierGUI extends javax.swing.JFrame {
                 .addContainerGap(30, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(editMedName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(editSuppName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnSaveMed)
+                .addComponent(btnSaveSupp)
                 .addGap(33, 33, 33))
         );
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 51)));
-        jPanel4.setName("btnMedSave"); // NOI18N
-
-        jLabel6.setText("Supplier Name:");
-        jLabel6.setName("lblMedName"); // NOI18N
-
-        editUMedName.setName("editMedNameUpdate"); // NOI18N
-
-        btnUpdateMed.setText("Update");
-        btnUpdateMed.setName("btnUpdateMed"); // NOI18N
-        btnUpdateMed.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateMedActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(editUMedName)
-                    .addComponent(btnUpdateMed, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(83, 83, 83)
-                        .addComponent(jLabel6)))
-                .addContainerGap(43, Short.MAX_VALUE))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap(35, Short.MAX_VALUE)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editUMedName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24)
-                .addComponent(btnUpdateMed)
-                .addGap(26, 26, 26))
-        );
-
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(null));
 
         jLabel7.setText("Add Supplier Contact:");
 
@@ -232,12 +324,18 @@ public class SupplierGUI extends javax.swing.JFrame {
             }
         });
 
-        btnClear.setText("Clear");
-        btnClear.addActionListener(new java.awt.event.ActionListener() {
+        SuppId.setText("ID:");
+
+        btnSuppDisplay.setText("Display Suppliers");
+        btnSuppDisplay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnClearActionPerformed(evt);
+                btnSuppDisplayActionPerformed(evt);
             }
         });
+
+        btnSuppPopulate.setText("Find");
+
+        btnClear.setText("Clear");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -248,40 +346,46 @@ public class SupplierGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(btnDisplaySupp, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(26, 26, 26))
-                                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                        .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
             .addComponent(btnHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(SuppId)
+                .addGap(18, 18, 18)
+                .addComponent(editSuppId, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(79, 79, 79)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnSuppPopulate, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSuppDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDisplaySupp)
-                    .addComponent(btnClear))
-                .addGap(18, 18, 18)
+                    .addComponent(SuppId)
+                    .addComponent(editSuppId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSuppDisplay))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addComponent(btnSuppPopulate)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnClear)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnHome)
@@ -290,11 +394,6 @@ public class SupplierGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnUpdateMedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateMedActionPerformed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_btnUpdateMedActionPerformed
 
     private void btnSuppContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuppContactActionPerformed
         // TODO add your handling code here:
@@ -310,14 +409,32 @@ public class SupplierGUI extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnHomeActionPerformed
 
-    private void btnSaveMedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveMedActionPerformed
+    private void btnSaveSuppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveSuppActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnSaveMedActionPerformed
+        suppId = editSuppId.getText().trim();
+        suppName = editSuppName.getText().trim();
+        
+         if (suppId.isEmpty()){
+           JOptionPane.showMessageDialog(null, "Invalid Supplier ID"); 
+        }else if(suppName.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Invalid Supplier Name"); 
+        }else if(evt.getSource() == btnSaveSupp)
+        {
+            save(suppId,suppName);
+        }
+    }//GEN-LAST:event_btnSaveSuppActionPerformed
 
-    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+    private void btnSuppDisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuppDisplayActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnClearActionPerformed
+        showTable();
+    }//GEN-LAST:event_btnSuppDisplayActionPerformed
 
+    private void btnDeleteSuppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteSuppActionPerformed
+        // TODO add your handling code here:
+    if(evt.getSource() == btnDeleteSupp){
+        deleteSupplier(editSuppId.getText().trim());
+    }//GEN-LAST:event_btnDeleteSuppActionPerformed
+    }    }
     /**
      * @param args the command line arguments
      */
@@ -351,28 +468,27 @@ public class SupplierGUI extends javax.swing.JFrame {
                 new SupplierGUI().setVisible(true);
             }
         });
-    }
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel SuppId;
     private javax.swing.JButton btnClear;
-    private javax.swing.JButton btnDisplaySupp;
+    private javax.swing.JButton btnDeleteSupp;
     private javax.swing.JButton btnHome;
-    private javax.swing.JButton btnSaveMed;
+    private javax.swing.JButton btnSaveSupp;
     private javax.swing.JButton btnSuppContact;
-    private javax.swing.JButton btnUpdateMed;
-    private javax.swing.JTextField editMedName;
-    private javax.swing.JTextField editUMedName;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnSuppDisplay;
+    private javax.swing.JButton btnSuppPopulate;
+    private javax.swing.JTextField editSuppId;
+    private javax.swing.JTextField editSuppName;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblSupp;
     // End of variables declaration//GEN-END:variables
 }

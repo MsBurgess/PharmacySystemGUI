@@ -4,15 +4,165 @@
  */
 package za.ac.cput.pharmacysystemgui;
 
+import com.google.gson.Gson;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import za.ac.cput.domain.Medication;
+import za.ac.cput.factory.MedicationFactory;
+import static za.ac.cput.pharmacysystemgui.EmployeeGUI.deleteEmployee;
+import static za.ac.cput.pharmacysystemgui.EmployeeGUI.save;
+import static za.ac.cput.pharmacysystemgui.PrescriptionGUI.JSON;
 
 /**
  *
  * @author Ilyaas Davids
  */
 public class MedicationGUI extends javax.swing.JFrame {
-    private String medName , medManuf ,medUName , medUManuf ;
-
+    LoginGUI loginGUI ;
+    private String medName , medManuf ,medId ,suppId ;
+    private static OkHttpClient client = new OkHttpClient();
+//////
+        private void showTable(){
+        DefaultTableModel dtModel = (DefaultTableModel) tblMed.getModel();
+        
+        List medicationList = getAll();
+        List<Medication> medication = medicationList;
+        
+        dtModel.setRowCount(0);
+        
+        for(int i = 0; i <medicationList.size(); i++){
+            dtModel.addRow(
+                    new Object[] {
+                        medication.get(i).getMedId(),
+                        medication.get(i).getMedName(),
+                        medication.get(i).getMedManufacturer(),
+                        medication.get(i).getSuppId()
+                    }
+            );
+        }
+    }
+    ///////   
+           private static  String get(String getURL) throws IOException
+    {
+        Request request = new Request.Builder()
+                .url(getURL)
+                .header("Authorization",  Credentials.basic("User", "54321"))
+                .build();
+        try (Response response = client.newCall(request).execute())
+        {
+            return response.body().string();
+        }
+    }   
+ //////   
+      public static List<Medication> getAll(){
+        List<Medication> medicationList = new ArrayList<>();
+        
+        try{ 
+            final String URL = "http:localhost:8080/PharmacySystem/medication/all";
+            String responseBody = get(URL);
+            JSONArray medication = new JSONArray(responseBody);
+            
+            for (int i = 0; i < medication.length();i++){
+                JSONObject medications = medication.getJSONObject(i);
+                
+                Gson g = new Gson();
+                Medication p = g.fromJson(medications.toString(), Medication.class);
+                medicationList.add(p);
+                System.out.println(p.toString());
+            }
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return medicationList;
+    }
+      /////find
+//     public static void findEmployee(String medId){
+//                try{      
+//            final String findURL = "http:localhost:8080/PharmacySystem/medication/find/" + medId;
+//            String responseBody = get(findURL);
+//            JSONArray medication = new JSONArray(responseBody);
+//            
+//            for (int i = 0; i < medication.length();i++){
+//                JSONObject medicaJSONObject = medication.getJSONObject(i);
+//                medId = medicaJSONObject.getString(medId);       
+//            }
+//        }
+//        catch(Exception e){
+//            System.out.println(e.getMessage());
+//        } 
+//     } 
+      
+/////post/save
+    private static String post(final String postURL, String json) throws IOException
+    {
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .url(postURL)
+                .header("Authorization",  Credentials.basic("Admin", "12345"))
+                .post(body)
+                .build();
+        try (Response response = client.newCall(request).execute())
+        {
+            return response.body().string();
+        }
+    }
+         public static void save(String medId, String medName, String medManuf, String SuppId){
+    
+        try{
+            
+        final String URL = "http:localhost:8080/PharmacySystem/medication/save";
+        Medication medication = MedicationFactory.createMedication(medId, medName, medManuf, SuppId);
+        Gson g = new Gson();
+        String jsonString = g.toJson(medication);
+        String r = post(URL, jsonString);
+        if(r != null)
+            JOptionPane.showMessageDialog(null, "Successfully saved.");
+        else
+            JOptionPane.showMessageDialog(null, "An error has occurred");
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
+         ////Delete
+             private static String delete  (final String deleteURL) throws IOException{
+        Request request = new Request.Builder()
+                .url(deleteURL)
+                .header("Authorization",  Credentials.basic("Admin", "12345"))
+                .delete()
+                .build();
+        
+        try(Response response = client.newCall(request).execute()){
+            return response.body().string();
+        }
+    }
+    
+    public static void deleteMedication(String medId){
+    try{
+        final String deleteURL ="http:localhost:8080/PharmacySystem/medication/delete/" + medId;
+        delete(deleteURL);
+        String responseBody = get(deleteURL);
+        
+        //maybe change this??
+         JOptionPane.showMessageDialog(null,"Entry successfully deleted!");
+    }catch(IOException e){
+        
+         JOptionPane.showMessageDialog(null, e.getMessage());
+    }
+}
+    
+      
+      
     /**
      * Creates new form MedicationGUI
      */
@@ -30,35 +180,30 @@ public class MedicationGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        editMedName = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        editMedManuf = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        cmbSuppSave = new javax.swing.JComboBox<>();
-        btnSaveMed = new javax.swing.JButton();
+        tblMed = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        btnDeleteMed = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
-        editUMedName = new javax.swing.JTextField();
+        editMedName = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        editUMedManuf = new javax.swing.JTextField();
+        editMedManuf = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jComboBox4 = new javax.swing.JComboBox<>();
-        btnUpdateMed = new javax.swing.JButton();
+        btnSaveMed = new javax.swing.JButton();
+        editSuppId = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
         btnHome = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
+        btnFindMed = new javax.swing.JButton();
+        editMedId = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Medication");
         setName("frameMedication"); // NOI18N
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblMed.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -69,78 +214,20 @@ public class MedicationGUI extends javax.swing.JFrame {
                 "med_ID", "med_Name", "med_Manufacturer", "supp_ID"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 51)));
-        jPanel1.setName("btnMedSave"); // NOI18N
-
-        jLabel1.setText("Medication Name:");
-        jLabel1.setName("lblMedName"); // NOI18N
-
-        editMedName.setName("editMedName"); // NOI18N
-
-        jLabel2.setText("Medication Manufacturer:");
-        jLabel2.setName("lblMedManuf"); // NOI18N
-
-        editMedManuf.setName("editMedManuf"); // NOI18N
-
-        jLabel3.setText("Supplier Name:");
-        jLabel3.setName("lblSuppName"); // NOI18N
-
-        cmbSuppSave.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1 / Ingram" }));
-        cmbSuppSave.setName("cmbSuppName"); // NOI18N
-
-        btnSaveMed.setText("Save");
-        btnSaveMed.setName("btnSaveMed"); // NOI18N
-        btnSaveMed.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveMedActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1)
-                    .addComponent(editMedName)
-                    .addComponent(editMedManuf)
-                    .addComponent(cmbSuppSave, 0, 246, Short.MAX_VALUE)
-                    .addComponent(btnSaveMed, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(38, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editMedName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editMedManuf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmbSuppSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnSaveMed)
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
+        jScrollPane1.setViewportView(tblMed);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(null));
 
         jLabel5.setText("Delete Medication:");
         jLabel5.setName("lblMedDelete"); // NOI18N
 
-        jButton3.setText("Delete");
-        jButton3.setName("btnDeleteMed"); // NOI18N
+        btnDeleteMed.setText("Delete");
+        btnDeleteMed.setName("btnDeleteMed"); // NOI18N
+        btnDeleteMed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteMedActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -149,9 +236,9 @@ public class MedicationGUI extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDeleteMed, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -159,7 +246,7 @@ public class MedicationGUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
+                .addComponent(btnDeleteMed)
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
@@ -169,24 +256,21 @@ public class MedicationGUI extends javax.swing.JFrame {
         jLabel6.setText("Medication Name:");
         jLabel6.setName("lblMedName"); // NOI18N
 
-        editUMedName.setName("editMedNameUpdate"); // NOI18N
+        editMedName.setName("editMedNameUpdate"); // NOI18N
 
         jLabel7.setText("Medication Manufacturer:");
         jLabel7.setName("lblMedManuf"); // NOI18N
 
-        editUMedManuf.setName("editMedManufUpdate"); // NOI18N
+        editMedManuf.setName("editMedManufUpdate"); // NOI18N
 
-        jLabel8.setText("Supplier Name:");
+        jLabel8.setText("Supplier ID:");
         jLabel8.setName("lblSuppName"); // NOI18N
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1 / Ingram" }));
-        jComboBox4.setName("cmbSuppNameUpdate"); // NOI18N
-
-        btnUpdateMed.setText("Update");
-        btnUpdateMed.setName("btnUpdateMed"); // NOI18N
-        btnUpdateMed.addActionListener(new java.awt.event.ActionListener() {
+        btnSaveMed.setText("Save");
+        btnSaveMed.setName("btnSaveMed"); // NOI18N
+        btnSaveMed.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateMedActionPerformed(evt);
+                btnSaveMedActionPerformed(evt);
             }
         });
 
@@ -200,34 +284,39 @@ public class MedicationGUI extends javax.swing.JFrame {
                     .addComponent(jLabel8)
                     .addComponent(jLabel7)
                     .addComponent(jLabel6)
-                    .addComponent(editUMedName)
-                    .addComponent(editUMedManuf)
-                    .addComponent(jComboBox4, 0, 246, Short.MAX_VALUE)
-                    .addComponent(btnUpdateMed, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(38, Short.MAX_VALUE))
+                    .addComponent(editMedName)
+                    .addComponent(editMedManuf)
+                    .addComponent(btnSaveMed, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+                    .addComponent(editSuppId))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editUMedName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(editMedName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editUMedManuf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(editMedManuf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnUpdateMed)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addComponent(editSuppId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(btnSaveMed)
+                .addGap(46, 46, 46))
         );
 
         jButton5.setText("Display Medications");
         jButton5.setName("btnDisplayMed"); // NOI18N
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         btnHome.setText("RETURN HOME");
         btnHome.addActionListener(new java.awt.event.ActionListener() {
@@ -239,6 +328,15 @@ public class MedicationGUI extends javax.swing.JFrame {
         btnClear.setText("Clear");
         btnClear.setName("btnFetchMed"); // NOI18N
 
+        btnFindMed.setText("Find");
+        btnFindMed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFindMedActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("ID :");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -249,40 +347,44 @@ public class MedicationGUI extends javax.swing.JFrame {
                     .addComponent(btnHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(jLabel4)
+                        .addGap(18, 18, 18)
+                        .addComponent(editMedId, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(46, 46, 46)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                                    .addComponent(btnClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(21, 21, 21)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(btnFindMed, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(editMedId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnFindMed)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnClear)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnHome)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(39, 39, 39))
         );
 
         pack();
@@ -290,28 +392,25 @@ public class MedicationGUI extends javax.swing.JFrame {
 
     private void btnSaveMedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveMedActionPerformed
         // TODO add your handling code here:
-        medName = editMedName.getText();
-        medManuf = editMedManuf.getText();
+        medId = editMedId.getText().trim();
+        medName = editMedName.getText().trim();
+        medManuf = editMedManuf.getText().trim();
+        suppId = editSuppId.getText().trim();
         
-        if (medName.isEmpty()){
+        if (medId.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Invalid Medication ID");  
+        }else if (medName.isEmpty()){
             JOptionPane.showMessageDialog(null, "Invalid Medication Name");
-        } else if(medManuf.isEmpty()){
+        }else if(medManuf.isEmpty()){
             JOptionPane.showMessageDialog(null, "Invalid Medication Manufacturer");
+        }else if (suppId.isEmpty()){
+           JOptionPane.showMessageDialog(null, "Invalid Supplier ID"); 
+        }else if(evt.getSource() == btnSaveMed)
+        {
+            save(medId,medName,medManuf,suppId);
         }
         
     }//GEN-LAST:event_btnSaveMedActionPerformed
-
-    private void btnUpdateMedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateMedActionPerformed
-        // TODO add your handling code here:
-        medUName = editUMedName.getText();
-        medUManuf = editUMedManuf.getText();
-        
-        if (medUName.isEmpty()){
-            JOptionPane.showMessageDialog(null, "Invalid Medication Name");
-        } else if(medUManuf.isEmpty()){
-            JOptionPane.showMessageDialog(null, "Invalid Medication Manufacturer");
-        }
-    }//GEN-LAST:event_btnUpdateMedActionPerformed
 
     private void btnHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeActionPerformed
         // TODO add your handling code here:
@@ -320,6 +419,22 @@ public class MedicationGUI extends javax.swing.JFrame {
         
         dispose();
     }//GEN-LAST:event_btnHomeActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        showTable();
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void btnFindMedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindMedActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnFindMedActionPerformed
+
+    private void btnDeleteMedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteMedActionPerformed
+        // TODO add your handling code here:
+                if(evt.getSource() == btnDeleteMed){
+                    deleteMedication(editMedId.getText().trim());
+        }
+    }//GEN-LAST:event_btnDeleteMedActionPerformed
 
     /**
      * @param args the command line arguments
@@ -358,28 +473,23 @@ public class MedicationGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnDeleteMed;
+    private javax.swing.JButton btnFindMed;
     private javax.swing.JButton btnHome;
     private javax.swing.JButton btnSaveMed;
-    private javax.swing.JButton btnUpdateMed;
-    private javax.swing.JComboBox<String> cmbSuppSave;
+    private javax.swing.JTextField editMedId;
     private javax.swing.JTextField editMedManuf;
     private javax.swing.JTextField editMedName;
-    private javax.swing.JTextField editUMedManuf;
-    private javax.swing.JTextField editUMedName;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JTextField editSuppId;
     private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox<String> jComboBox4;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblMed;
     // End of variables declaration//GEN-END:variables
 }
