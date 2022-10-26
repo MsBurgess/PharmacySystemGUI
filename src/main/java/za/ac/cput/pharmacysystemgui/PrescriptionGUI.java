@@ -30,6 +30,8 @@ import static za.ac.cput.pharmacysystemgui.EmployeeGUI.getAll;
  */
 public class PrescriptionGUI extends javax.swing.JFrame {
 
+     LoginGUI loginGUI = new LoginGUI() ;
+     
  private static OkHttpClient client = new OkHttpClient();
  
  public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
@@ -46,6 +48,23 @@ public class PrescriptionGUI extends javax.swing.JFrame {
 //            return response.body().string();
 //        }
 //    }
+  
+  private void Authentication(){
+
+        if(loginGUI.isAdmin() == false){
+            
+            btnPrescriptionDelete.setEnabled(false);
+            txtPrescriptionId.setEnabled(false);
+            txtPrescriptionDoses.setEnabled(false);
+            txtIdDelete.setEnabled(false);
+            cboPrescriptionType.setEnabled(false);
+            
+            btnPrescriptionPost.setEnabled(false);
+            txtIdDelete.setEnabled(false);
+        }
+
+        
+    }
   
       private void showTable(){
         DefaultTableModel dtModel = (DefaultTableModel) tablePrescriptionView.getModel();
@@ -165,6 +184,7 @@ public class PrescriptionGUI extends javax.swing.JFrame {
      */
     public PrescriptionGUI() {
         initComponents();
+        Authentication();
     }
 
     /**
@@ -313,6 +333,8 @@ public class PrescriptionGUI extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("TABLE", jScrollPane1);
 
+        jPanel4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
         btnPrescriptionPost.setText("ADD PRESCRIPTION");
         btnPrescriptionPost.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -352,12 +374,12 @@ public class PrescriptionGUI extends javax.swing.JFrame {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtPrescriptionDoses, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
                             .addComponent(cboPrescriptionType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(260, Short.MAX_VALUE))
+                .addContainerGap(256, Short.MAX_VALUE))
             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel4Layout.createSequentialGroup()
                     .addGap(183, 183, 183)
                     .addComponent(txtPrescriptionId, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(426, Short.MAX_VALUE)))
+                    .addContainerGap(422, Short.MAX_VALUE)))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -420,7 +442,7 @@ public class PrescriptionGUI extends javax.swing.JFrame {
                     .addComponent(txtIdDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(62, 62, 62)
                 .addComponent(btnPrescriptionDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(169, Short.MAX_VALUE))
+                .addContainerGap(173, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("DELETE", jPanel5);

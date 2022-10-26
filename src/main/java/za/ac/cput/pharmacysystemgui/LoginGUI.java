@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
  */
 public class LoginGUI extends javax.swing.JFrame {
 
-  public  boolean admin;
+  public  static boolean admin;
 
     public boolean isAdmin() {
         return admin;

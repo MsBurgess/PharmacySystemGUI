@@ -27,24 +27,29 @@ import static za.ac.cput.pharmacysystemgui.PrescriptionGUI.JSON;
  */
 public class EmployeeGUI extends javax.swing.JFrame {
     
-    LoginGUI loginGUI ;
-    
+    LoginGUI loginGUI = new LoginGUI() ;
     
 
     
     private static OkHttpClient client = new OkHttpClient();
     
-//    public static String run(String URL) throws IOException{
-//        Request request = new Request.Builder()
-//                .url(URL)
-//                //security part
-//                .header("Authorization",  Credentials.basic("User", "54321"))
-//                .build();
-//        try(Response response = client.newCall(request).execute()){
-//            return response.body().string();
-//        }
-//    }
-    
+    private void Authentication(){
+
+        if(loginGUI.isAdmin() == false){
+            
+            txtEmployeeId.setEnabled(false);
+            txtEmployeeFName.setEnabled(false);
+            txtEmployeeLName.setEnabled(false);
+            txtEmployeeMName.setEnabled(false);
+            cboEmployeeGender.setEnabled(false);
+            PostBtn.setEnabled(false);
+            
+            deleteEmployeeId.setEnabled(false);
+            BtnDelete.setEnabled(false);  
+        }
+
+        
+    }
     private void showTable(){
         DefaultTableModel dtModel = (DefaultTableModel) tableEmployeeView.getModel();
         
@@ -168,9 +173,11 @@ public class EmployeeGUI extends javax.swing.JFrame {
     public EmployeeGUI() {
         initComponents();
         
+        Authentication();
+        
         //isAdmin boolean
         
-        System.out.println(loginGUI.isAdmin());
+        //System.out.println();
         //Add disable buttons based on authentication;
     }
 
@@ -535,6 +542,7 @@ public class EmployeeGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(evt.getSource() == BtnDelete){
             deleteEmployee(deleteEmployeeId.getText().trim());
+             
         }
     }//GEN-LAST:event_BtnDeleteActionPerformed
 
@@ -544,9 +552,9 @@ public class EmployeeGUI extends javax.swing.JFrame {
     public static void main(String args[]) {
         
         
-        save("219010145","male", "Zaeem", "a","Petersen");
-        save("2164565484","male", "Waseem", "a","Dollie");
-        deleteEmployee("219010145");
+//        save("219010145","male", "Zaeem", "a","Petersen");
+//        save("2164565484","male", "Waseem", "a","Dollie");
+//        deleteEmployee("219010145");
         
         MedicationGUI medicationGUI = new MedicationGUI();
         medicationGUI.show();
