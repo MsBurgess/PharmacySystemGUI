@@ -7,11 +7,13 @@ package za.ac.cput.domain;
 
 
 import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-
+@Entity
 public class Prescription implements Serializable {
 
-
+    @Id
     private String prescID;
     private String prescType;
     private String prescDoses;

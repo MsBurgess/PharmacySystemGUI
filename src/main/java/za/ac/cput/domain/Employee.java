@@ -8,15 +8,18 @@ package za.ac.cput.domain;
 
 
 import java.io.Serializable;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
+@Entity
 public class Employee implements Serializable {
 
-
+    @Id
     private String staffId;
     private String gender;
-
+    @Embedded
     private Name name;
-
     protected Employee(){}
 
     //builder constructor
