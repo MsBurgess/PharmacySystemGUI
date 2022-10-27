@@ -336,6 +336,11 @@ public class SupplierGUI extends javax.swing.JFrame {
         btnSuppPopulate.setText("Find");
 
         btnClear.setText("Clear");
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -368,8 +373,9 @@ public class SupplierGUI extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
+                .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SuppId)
                     .addComponent(editSuppId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -431,10 +437,19 @@ public class SupplierGUI extends javax.swing.JFrame {
 
     private void btnDeleteSuppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteSuppActionPerformed
         // TODO add your handling code here:
+        suppId = editSuppId.getText().trim();
     if(evt.getSource() == btnDeleteSupp){
-        deleteSupplier(editSuppId.getText().trim());
+        if (suppId.isEmpty()){
+           JOptionPane.showMessageDialog(null, "Invalid Supplier ID");  
+        }else{deleteSupplier(suppId);}
     }//GEN-LAST:event_btnDeleteSuppActionPerformed
-    }    }
+    }
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        // TODO add your handling code here:
+        editSuppId.setText("");
+        editSuppName.setText(""); 
+    }//GEN-LAST:event_btnClearActionPerformed
+
     /**
      * @param args the command line arguments
      */
