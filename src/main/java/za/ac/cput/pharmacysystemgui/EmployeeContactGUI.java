@@ -97,7 +97,7 @@ public class EmployeeContactGUI extends javax.swing.JFrame {
     
         try{
             
-        final String URL = "http:localhost:8080/PharmacySystem/employee/save";
+        final String URL = "http:localhost:8080/PharmacySystem/employeeContact/save";
         EmployeeContact employeeContact = EmployeeContactFactory.build(staffId, contactNumber, email);
         Gson g = new Gson();
         String jsonString = g.toJson(employeeContact);

@@ -482,42 +482,9 @@ public class PharmacyContactGUI extends javax.swing.JFrame {
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
          if(evt.getSource()==btnDelete)
-        {deletePharmacy(txtDeletePharmId.getText().trim());}
+        {deletePharmacyContact(txtDeletePharmId.getText().trim());}
     }//GEN-LAST:event_btnDeleteActionPerformed
-
-    private void GetAllActionPerformed(java.awt.event.ActionEvent evt) {                                       
-        // TODO add your handling code here:
-        showTable();
-         //getAll();
-    }                                      
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-            System.exit(0);        // TODO add your handling code here:
-    }                                        
-
-                                    
-
-    private void PostBtnActionPerformed(java.awt.event.ActionEvent evt) {                                        
-        // TODO add your handling code here:
-        if(evt.getSource() == btnAddPharm)
-        {
-            
-            //fix
-            save(txtPharmId.getText().trim(), txtContactNumber.getText().toString().trim(), txtEmail.getText().trim());
-        }
-    }                                       
-
-    private void txtPharmNameActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-        // TODO add your handling code here:
-    }                                                 
-
-    private void btnDeletePharmActionPerformed(java.awt.event.ActionEvent evt) {                                          
-        // TODO add your handling code here:
-        if(evt.getSource() == btnDelete){
-            deletePharmacy(txtDeletePharmId.getText().trim());
-        }
-    }       
-    
+      
     /**
      * @param args the command line arguments
      */

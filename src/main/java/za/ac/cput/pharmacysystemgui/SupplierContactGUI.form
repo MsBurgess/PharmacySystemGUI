@@ -218,7 +218,7 @@
     </Container>
     <Component class="javax.swing.JButton" name="btnSupplierReturn">
       <Properties>
-        <Property name="text" type="java.lang.String" value="RETURN TO SUPPLIER"/>
+        <Property name="text" type="java.lang.String" value="RETURN TO HOME"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSupplierReturnActionPerformed"/>

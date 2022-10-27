@@ -81,7 +81,7 @@ public class SupplierContactGUI extends javax.swing.JFrame {
         List<SupplierContact> supplierContactList = new ArrayList<>();
         
         try{ 
-            final String URL = "http:localhost:8080/PharmacySystem/supplierContact/all";
+            final String URL = "http:localhost:8080/supplierContact/all";
             String responseBody = get(URL);
             JSONArray supplierContact = new JSONArray(responseBody);
             
@@ -142,7 +142,7 @@ public class SupplierContactGUI extends javax.swing.JFrame {
     
         try{
             
-        final String URL = "http:localhost:8080/PharmacySystem/supplierContact/save";
+        final String URL = "http:localhost:8080/supplierContact/save";
         SupplierContact supplierContact = SupplierContactFactory.createSupplierContact(suppId, suppContactNo, suppEmail);
         Gson g = new Gson();
         String jsonString = g.toJson(supplierContact);
@@ -170,7 +170,7 @@ public class SupplierContactGUI extends javax.swing.JFrame {
     
     public static void deleteSupplierContact(String suppId){
     try{
-        final String deleteURL ="http:localhost:8080/PharmacySystem/supplierContact/delete/" + suppId;
+        final String deleteURL ="http:localhost:8080/supplierContact/delete/" + suppId;
         delete(deleteURL);
         String responseBody = get(deleteURL);
         
@@ -299,7 +299,7 @@ public class SupplierContactGUI extends javax.swing.JFrame {
                 .addGap(54, 54, 54))
         );
 
-        btnSupplierReturn.setText("RETURN TO SUPPLIER");
+        btnSupplierReturn.setText("RETURN TO HOME");
         btnSupplierReturn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSupplierReturnActionPerformed(evt);
@@ -444,8 +444,8 @@ public class SupplierContactGUI extends javax.swing.JFrame {
 
     private void btnSupplierReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupplierReturnActionPerformed
         // TODO add your handling code here:
-        SupplierGUI supplier = new SupplierGUI();
-        supplier.show();
+        HomeGUI home = new HomeGUI();
+        home.show();
         
         dispose();
     }//GEN-LAST:event_btnSupplierReturnActionPerformed

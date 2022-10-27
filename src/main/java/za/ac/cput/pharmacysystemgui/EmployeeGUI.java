@@ -219,8 +219,11 @@ public class EmployeeGUI extends javax.swing.JFrame {
         deleteEmployeeId = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(219, 194, 173));
+        setForeground(java.awt.Color.white);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Employee Database");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);

@@ -463,6 +463,8 @@ public class SupplierGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         SupplierContactGUI supplierContact = new SupplierContactGUI();
         supplierContact.show();
+        
+        dispose();
     }//GEN-LAST:event_btnSuppContactActionPerformed
 
     private void btnHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeActionPerformed
