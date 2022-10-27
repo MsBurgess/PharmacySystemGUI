@@ -55,10 +55,8 @@ public class Contact implements Serializable {
 
     @Override
     public String toString() {
-        return "Contact{" +
-                "contactNumber='" + contactNumber + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+        return contactNumber + " /  " + email;
+               
     }
 
     public static class Builder {

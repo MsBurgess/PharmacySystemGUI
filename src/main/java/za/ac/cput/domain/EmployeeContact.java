@@ -55,10 +55,11 @@ public class EmployeeContact implements Serializable {
 
     @Override
     public String toString() {
-        return "EmployeeContact{" +
-                "staffId='" + staffId + '\'' +
-                '}';
+        return "EmployeeContact{" + "staffId=" + staffId + ", contact=" + contact + '}';
     }
+
+
+ 
     public static class Builder {
         private String staffId;
         private Contact contact;
@@ -84,7 +85,7 @@ public class EmployeeContact implements Serializable {
             return new EmployeeContact(this);
         }
     }
+   }
 
 
-}
 

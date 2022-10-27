@@ -1,6 +1,7 @@
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\domain\Medication.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\domain\Customer.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\domain\Pharmacy.java
+C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\pharmacysystemgui\CustomerContactGUI.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\pharmacysystemgui\MedicationGUI.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\factory\EmployeeContactFactory.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\factory\InventoryFactory.java
@@ -15,11 +16,13 @@ C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\ma
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\pharmacysystemgui\CustomerGUI.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\domain\Contact.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\domain\EmployeeContact.java
+C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\pharmacysystemgui\InventoryGUI.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\domain\Supplier.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\util\StringHelper.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\factory\PharmacyFactory.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\factory\PharmacyContactFactory.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\factory\NameFactory.java
+C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\pharmacysystemgui\PharmacyContactGUI.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\domain\Inventory.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\domain\Name.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\factory\SupplierContactFactory.java
@@ -27,6 +30,7 @@ C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\ma
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\domain\Employee.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\factory\CustomerContactFactory.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\pharmacysystemgui\EmployeeContactGUI.java
+C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\pharmacysystemgui\PharmacyGUI.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\pharmacysystemgui\EmployeeGUI.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\domain\PharmacyContact.java
 C:\Users\Zaeem\Desktop\Capstone ADP3\NEW (work on this)\PharmacySystemGUI\src\main\java\za\ac\cput\domain\SupplierContact.java

@@ -26,6 +26,8 @@ public class SupplierContact implements Serializable {
     public Contact getContact() {
         return contact;
     }
+    
+    
 
     @Override
     public String toString() {

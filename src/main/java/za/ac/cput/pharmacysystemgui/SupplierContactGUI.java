@@ -20,8 +20,7 @@ import org.json.JSONObject;
 import za.ac.cput.domain.SupplierContact;
 import za.ac.cput.factory.SupplierContactFactory;
 import static za.ac.cput.pharmacysystemgui.PrescriptionGUI.JSON;
-import static za.ac.cput.pharmacysystemgui.SupplierGUI.deleteSupplier;
-import static za.ac.cput.pharmacysystemgui.SupplierGUI.save;
+import za.ac.cput.util.Helper;
 
 /**
  *
@@ -29,8 +28,22 @@ import static za.ac.cput.pharmacysystemgui.SupplierGUI.save;
  */
 public class SupplierContactGUI extends javax.swing.JFrame {
     private String suppId,suppNo,suppEmail;
-      LoginGUI loginGUI ;
+          LoginGUI loginGUI = new LoginGUI();
     private static OkHttpClient client = new OkHttpClient();
+    ///
+            private void Authentication(){
+
+        if(loginGUI.isAdmin() == false){
+            
+            lblDelete.setEnabled(false);
+            btnSuppCDelete.setEnabled(false);
+            btnSaveSuppContact.setEnabled(false);
+            editContactNo.setEditable(false);
+            editSuppEmail.setEditable(false);
+           
+        }
+    
+    }
     
     ///
             private void showTable(){
@@ -45,7 +58,8 @@ public class SupplierContactGUI extends javax.swing.JFrame {
             dtModel.addRow(
                     new Object[] {
                         supplierContact.get(i).getSuppId(),
-                        supplierContact.get(i).getContact(),
+                        supplierContact.get(i).getContact()
+
                     }
             );
         }
@@ -86,6 +100,31 @@ public class SupplierContactGUI extends javax.swing.JFrame {
         return supplierContactList;
     }
     ////
+               public void find(String id){
+         
+        List supplierCList = getAll();
+        List<SupplierContact> supplier = supplierCList;
+       
+        
+        for(int i = 0; i < supplierCList.size(); i++){
+            suppId = supplier.get(i).getSuppId();
+            suppNo = supplier.get(i).getContact().getContactNumber();
+            suppEmail = supplier.get(i).getContact().getEmail();
+ 
+            
+            if(suppId.equals(id)){
+                editContactNo.setText(suppNo);
+                editSuppEmail.setText(suppEmail);
+                break;
+            }else{
+                 JOptionPane.showMessageDialog(null, "Supplier ID "+editSuppId.getText().trim()+" NOT FOUND");
+                 break;
+            }
+            
+        }
+
+     }  
+    ///  
          private static String post(final String postURL, String json) throws IOException
     {
         RequestBody body = RequestBody.create(JSON, json);
@@ -148,6 +187,7 @@ public class SupplierContactGUI extends javax.swing.JFrame {
      */
     public SupplierContactGUI() {
         initComponents();
+        Authentication();
     }
 
     /**
@@ -172,12 +212,13 @@ public class SupplierContactGUI extends javax.swing.JFrame {
         btnClear = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         editSuppId = new javax.swing.JTextField();
-        btnSuppContPopulate = new javax.swing.JButton();
+        btnSuppContFind = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
-        jLabel12 = new javax.swing.JLabel();
+        lblDelete = new javax.swing.JLabel();
         btnSuppCDelete = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(219, 194, 173));
 
         btnDisplaySuppContact.setText("Display Supplier Contact");
         btnDisplaySuppContact.setName("btnDisplayMed"); // NOI18N
@@ -189,17 +230,17 @@ public class SupplierContactGUI extends javax.swing.JFrame {
 
         tblSuppC.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "supp_ID", "supp_ContactNumber", "supp_Email"
+                "supp_ID", "supp_Contact"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -208,6 +249,7 @@ public class SupplierContactGUI extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tblSuppC);
 
+        jPanel5.setBackground(new java.awt.Color(219, 194, 173));
         jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 51)));
         jPanel5.setName("btnMedSave"); // NOI18N
 
@@ -277,12 +319,18 @@ public class SupplierContactGUI extends javax.swing.JFrame {
 
         editSuppId.setName("editMedManufUpdate"); // NOI18N
 
-        btnSuppContPopulate.setText("Populate");
+        btnSuppContFind.setText("Find");
+        btnSuppContFind.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuppContFindActionPerformed(evt);
+            }
+        });
 
-        jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        jPanel7.setBackground(new java.awt.Color(219, 194, 173));
+        jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jLabel12.setText("Delete Supplier Contact:");
-        jLabel12.setName("lblMedDelete"); // NOI18N
+        lblDelete.setText("Delete Supplier Contact:");
+        lblDelete.setName("lblMedDelete"); // NOI18N
 
         btnSuppCDelete.setText("Delete");
         btnSuppCDelete.setName("btnDeleteMed"); // NOI18N
@@ -300,14 +348,14 @@ public class SupplierContactGUI extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnSuppCDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12))
+                    .addComponent(lblDelete))
                 .addContainerGap(47, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSuppCDelete)
                 .addContainerGap(40, Short.MAX_VALUE))
@@ -341,7 +389,7 @@ public class SupplierContactGUI extends javax.swing.JFrame {
                                     .addComponent(btnDisplaySuppContact, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(btnClear, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                                        .addComponent(btnSuppContPopulate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addComponent(btnSuppContFind, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
@@ -357,7 +405,7 @@ public class SupplierContactGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnSuppContPopulate)
+                        .addComponent(btnSuppContFind)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnClear)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -373,6 +421,7 @@ public class SupplierContactGUI extends javax.swing.JFrame {
 
     private void btnDisplaySuppContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisplaySuppContactActionPerformed
         // TODO add your handling code here:
+        showTable();
     }//GEN-LAST:event_btnDisplaySuppContactActionPerformed
 
     private void btnSaveSuppContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveSuppContactActionPerformed
@@ -385,7 +434,7 @@ public class SupplierContactGUI extends javax.swing.JFrame {
            JOptionPane.showMessageDialog(null, "Invalid Supplier ID"); 
         }else if(suppNo.isEmpty()){
             JOptionPane.showMessageDialog(null, "Invalid Supplier Number"); 
-        }else if(suppEmail.isEmpty()){
+        }else if(suppEmail.isEmpty() || !Helper.isValidEmail(suppEmail)){
             JOptionPane.showMessageDialog(null, "Invalid Supplier Email"); 
         }else if(evt.getSource() == btnSaveSuppContact)
         {
@@ -415,6 +464,17 @@ public class SupplierContactGUI extends javax.swing.JFrame {
         deleteSupplierContact(editSuppId.getText().trim());
     } 
     }//GEN-LAST:event_btnSuppCDeleteActionPerformed
+
+    private void btnSuppContFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuppContFindActionPerformed
+        // TODO add your handling code here:
+       suppId = editSuppId.getText().trim();
+        
+        if (suppId.isEmpty()){
+        JOptionPane.showMessageDialog(null, "Invalid Supplier ID"); 
+        }else{
+            find(suppId);
+        }
+    }//GEN-LAST:event_btnSuppContFindActionPerformed
 
     /**
      * @param args the command line arguments
@@ -456,18 +516,18 @@ public class SupplierContactGUI extends javax.swing.JFrame {
     private javax.swing.JButton btnDisplaySuppContact;
     private javax.swing.JButton btnSaveSuppContact;
     private javax.swing.JButton btnSuppCDelete;
-    private javax.swing.JButton btnSuppContPopulate;
+    private javax.swing.JButton btnSuppContFind;
     private javax.swing.JButton btnSupplierReturn;
     private javax.swing.JTextField editContactNo;
     private javax.swing.JTextField editSuppEmail;
     private javax.swing.JTextField editSuppId;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblDelete;
     private javax.swing.JTable tblSuppC;
     // End of variables declaration//GEN-END:variables
 }
